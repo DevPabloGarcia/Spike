@@ -39,6 +39,12 @@
             android:exported="false"
             android:label="Expo"
             android:theme="@style/Theme.Spike" />
+
+        <activity
+            android:name=".ExpoSecondaryActivity"
+            android:exported="false"
+            android:label="Expo"
+            android:theme="@style/Theme.Spike" />
     </application>
 
 </manifest>
