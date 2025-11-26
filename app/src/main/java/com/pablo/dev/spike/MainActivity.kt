@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pablo.dev.spike.ui.theme.SpikeTheme
+import com.telefonica.expoconfig2.ExpoActivity
+import com.telefonica.expoconfig2.ExpoSecondaryActivity
+import kotlin.jvm.java
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
