@@ -20,13 +20,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ExpoActivity"
+            android:name=".ExpoActivityA"
             android:exported="false"
             android:label="Expo"
             android:theme="@style/Theme.Spike" />
 
         <activity
-            android:name=".ExpoSecondaryActivity"
+            android:name=".ExpoActivityB"
             android:exported="false"
             android:label="Expo"
             android:theme="@style/Theme.Spike" />

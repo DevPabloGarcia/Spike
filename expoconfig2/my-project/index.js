@@ -1,6 +1,6 @@
 import { AppRegistry } from 'react-native';
-import App from './App';
-import Secondary from './Secondary';
+import ActivityA from './ActivityA';
+import ActivityB from './ActivityB';
 
-AppRegistry.registerComponent('main', () => App);
-AppRegistry.registerComponent('secondary', () => Secondary);
+AppRegistry.registerComponent('activity_a', () => ActivityA);
+AppRegistry.registerComponent('activity_b', () => ActivityB);

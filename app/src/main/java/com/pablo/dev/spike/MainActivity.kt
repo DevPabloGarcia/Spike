@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pablo.dev.spike.ui.theme.SpikeTheme
-import com.telefonica.expoconfig2.ExpoActivity
-import com.telefonica.expoconfig2.ExpoSecondaryActivity
+import com.telefonica.expoconfig2.ExpoActivityA
+import com.telefonica.expoconfig2.ExpoActivityB
 import kotlin.jvm.java
 
 class MainActivity : ComponentActivity() {
@@ -32,11 +32,11 @@ class MainActivity : ComponentActivity() {
                             startActivity(intent)
                         },
                         onExpoClick = {
-                            val intent = Intent(this, ExpoActivity::class.java)
+                            val intent = Intent(this, ExpoActivityA::class.java)
                             startActivity(intent)
                         },
                         onExpoSecondaryClick = {
-                            val intent = Intent(this, ExpoSecondaryActivity::class.java)
+                            val intent = Intent(this, ExpoActivityB::class.java)
                             startActivity(intent)
                         },
                         modifier = Modifier.padding(innerPadding)

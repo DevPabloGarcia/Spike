@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Platform, StatusBar as RNStatusBar } from 'react-native';
 import { useState } from 'react';
 
-export default function Secondary() {
+export default function ActivityA() {
   const [counter, setCounter] = useState(0);
 
   const handleBack = () => {
@@ -15,6 +15,14 @@ export default function Secondary() {
 
   const handleReset = () => {
     setCounter(0);
+  };
+
+  const handleShowAlert = () => {
+    Alert.alert(
+      '¡Expo funciona!',
+      'Este es un mensaje de prueba',
+      [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+    );
   };
 
   return (
@@ -41,6 +49,9 @@ export default function Secondary() {
           <Text style={styles.buttonText}>Resetear</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity style={[styles.button, styles.buttonSuccess]} onPress={handleShowAlert}>
+          <Text style={styles.buttonText}>Mostrar Alerta</Text>
+        </TouchableOpacity>
       </View>
 
       <StatusBar style="light" />
