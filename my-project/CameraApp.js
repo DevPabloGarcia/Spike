@@ -8,6 +8,8 @@ export default function CameraApp() {
     const device = useCameraDevice('back');
     const cameraRef = useRef(null);
     const [photoUri, setPhotoUri] = useState(null);
+    const [ocrDetections, setOcrDetections] = useState([]);
+    const [imageLayout, setImageLayout] = useState(null);
     const model = useOCR({ model: OCR_ENGLISH });
 
     const takePhoto = async () => {
@@ -29,37 +31,101 @@ export default function CameraApp() {
 
     const analyzeImage = async () => {
         console.log("OCR - Analyzing image");
+        const detections = [];
         for (const ocrDetection of await model.forward(photoUri)) {
-            //console.log('OCR - Bounding box: ', ocrDetection.bbox);
+            console.log('OCR - Bounding box: ', ocrDetection.bbox);
             console.log('OCR - detected label: ', ocrDetection.text);
-            //console.log('OCR - Bounding score: ', ocrDetection.score);
+            console.log('OCR - Bounding score: ', ocrDetection.score);
+            detections.push(ocrDetection);
         }
+        setOcrDetections(detections);
         console.log("OCR - Analysis complete");
     }
+
+    const reset = () => {
+        setPhotoUri(null);
+        setOcrDetections([]);
+        setImageLayout(null);
+    };
 
     if (device == null) return <NoCameraErrorView />;
     return (
         <View style={{ flex: 1 }}>
-            <Camera
-                ref={cameraRef}
-                style={StyleSheet.absoluteFill}
-                device={device}
-                isActive={true}
-                photo={true}
-            />
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={takePhoto}>
-                    <Text style={styles.buttonText}>Take Picture</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={analyzeImage}>
-                    <Text style={styles.buttonText}>Analyze Image</Text>
-                </TouchableOpacity>
-            </View>
-            {photoUri && (
-                <View style={styles.photoPreviewContainer}>
-                    <Text style={styles.previewLabel}>Preview:</Text>
-                    <Image source={{ uri: photoUri }} style={styles.photoPreview} />
-                </View>
+            {photoUri ? (
+                <>
+                    <Image 
+                        source={{ uri: photoUri }} 
+                        style={styles.fullPreview} 
+                        resizeMode="cover"
+                        onLayout={(event) => {
+                            const { width, height } = event.nativeEvent.layout;
+                            console.log('Image layout:', width, height);
+                            setImageLayout({ width, height });
+                        }}
+                    />
+                    {imageLayout && ocrDetections.map((detection, index) => {
+                        const { bbox } = detection;
+                        if (!bbox || bbox.length !== 4) return null;
+                        
+                        // Convert from original image coordinates to display coordinates
+                        const originalImageWidth = 3024;
+                        const originalImageHeight = 4032;
+                        const scaleX = imageLayout.width / originalImageWidth;
+                        const scaleY = imageLayout.height / originalImageHeight;
+                        
+                        // Get bounding rectangle from 4 points
+                        const xs = bbox.map(point => point.x * scaleX);
+                        const ys = bbox.map(point => point.y * scaleY);
+                        const minX = Math.min(...xs);
+                        const maxX = Math.max(...xs);
+                        const minY = Math.min(...ys);
+                        const maxY = Math.max(...ys);
+                        
+                        console.log('Bounding box points:', bbox);
+                        console.log('Scaled rect:', { left: minX, top: minY, width: maxX - minX, height: maxY - minY });
+                        
+                        return (
+                            <View
+                                key={index}
+                                style={[
+                                    styles.boundingBox,
+                                    {
+                                        left: minX,
+                                        top: minY,
+                                        width: maxX - minX,
+                                        height: maxY - minY,
+                                    },
+                                ]}
+                            />
+                        );
+                    })}
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={() => setPhotoUri(null)}>
+                            <Text style={styles.buttonText}>Reset</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={analyzeImage}>
+                            <Text style={styles.buttonText}>Analyze Image</Text>
+                        </TouchableOpacity>
+                    </View>
+                </>
+            ) : (
+                <>
+                    <Camera
+                        ref={cameraRef}
+                        style={StyleSheet.absoluteFill}
+                        device={device}
+                        isActive={true}
+                        photo={true}
+                    />
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={takePhoto}>
+                            <Text style={styles.buttonText}>Take Picture</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={analyzeImage}>
+                            <Text style={styles.buttonText}>Analyze Image</Text>
+                        </TouchableOpacity>
+                    </View>
+                </>
             )}
         </View>
     );
@@ -88,26 +154,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    photoPreviewContainer: {
+    fullPreview: {
+        ...StyleSheet.absoluteFillObject,
+        width: '100%',
+        height: '100%',
+    },
+    boundingBox: {
         position: 'absolute',
-        bottom: 120,
-        left: 0,
-        right: 0,
-        alignItems: 'center',
-    },
-    previewLabel: {
-        color: '#fff',
-        fontSize: 16,
-        marginBottom: 8,
-        textShadowColor: '#000',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 2,
-    },
-    photoPreview: {
-        width: 120,
-        height: 180,
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: '#fff',
+        borderWidth: 3,
+        borderColor: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
     },
 });
