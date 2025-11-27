@@ -1,5 +1,10 @@
 {
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["my-project"]
+  "workspaces": [
+    "my-project"
+  ],
+  "dependencies": {
+    "tesseract.js": "^6.0.1"
+  }
 }
