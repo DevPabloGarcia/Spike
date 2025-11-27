@@ -2,11 +2,13 @@
 import React, { useRef, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
 import { Camera, useCameraDevice, NoCameraErrorView } from "react-native-vision-camera";
+import { useOCR, OCR_ENGLISH } from 'react-native-executorch';
 
 export default function CameraApp() {
     const device = useCameraDevice('back');
     const cameraRef = useRef(null);
     const [photoUri, setPhotoUri] = useState(null);
+    const model = useOCR({ model: OCR_ENGLISH });
 
     const takePhoto = async () => {
         if (cameraRef.current) {
@@ -18,12 +20,22 @@ export default function CameraApp() {
                     uri = 'file://' + uri;
                 }
                 setPhotoUri(uri);
-                console.log('Photo taken:', photo);
+                console.log('OCR - Photo taken:', photo);
             } catch (e) {
                 console.error('Failed to take photo', e);
             }
         }
     };
+
+    const analyzeImage = async () => {
+        console.log("OCR - Analyzing image");
+        for (const ocrDetection of await model.forward(photoUri)) {
+            //console.log('OCR - Bounding box: ', ocrDetection.bbox);
+            console.log('OCR - detected label: ', ocrDetection.text);
+            //console.log('OCR - Bounding score: ', ocrDetection.score);
+        }
+        console.log("OCR - Analysis complete");
+    }
 
     if (device == null) return <NoCameraErrorView />;
     return (
@@ -38,6 +50,9 @@ export default function CameraApp() {
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={takePhoto}>
                     <Text style={styles.buttonText}>Take Picture</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={analyzeImage}>
+                    <Text style={styles.buttonText}>Analyze Image</Text>
                 </TouchableOpacity>
             </View>
             {photoUri && (
