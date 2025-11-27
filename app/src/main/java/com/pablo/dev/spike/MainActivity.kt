@@ -32,6 +32,10 @@ class MainActivity : ComponentActivity() {
                             val intent = Intent(this, ExpoActivity::class.java)
                             startActivity(intent)
                         },
+                        onOpenCamera = {
+                            val intent = Intent(this, CameraActivity::class.java)
+                            startActivity(intent)
+                        },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -44,6 +48,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     onAndroidClick: () -> Unit,
     onExpoClick: () -> Unit,
+    onOpenCamera: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -69,6 +74,13 @@ fun MainScreen(
         ) {
             Text("Ir a Expo")
         }
+
+        Button(
+            onClick = onOpenCamera,
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text("Open camera")
+        }
     }
 }
 
@@ -78,7 +90,8 @@ fun MainScreenPreview() {
     SpikeTheme {
         MainScreen(
             onAndroidClick = {},
-            onExpoClick = {}
+            onExpoClick = {},
+            onOpenCamera = {},
         )
     }
 }

@@ -6,7 +6,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 
-    def nodeCommand = "/opt/homebrew/bin/node"
+    def nodeCommand = "node"
     def reactNativeGradlePlugin = new File(
             providers.exec {
                 workingDir(rootDir)
