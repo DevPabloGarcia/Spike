@@ -1,6 +1,6 @@
 
 import React, { useRef, useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Image, ActivityIndicator } from "react-native";
 import { Camera, useCameraDevice, NoCameraErrorView } from "react-native-vision-camera";
 import { useOCR, OCR_ENGLISH } from 'react-native-executorch';
 
@@ -10,6 +10,7 @@ export default function CameraApp() {
     const [photoUri, setPhotoUri] = useState(null);
     const [ocrDetections, setOcrDetections] = useState([]);
     const [imageLayout, setImageLayout] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
     const model = useOCR({ model: OCR_ENGLISH });
 
     const takePhoto = async () => {
@@ -30,22 +31,30 @@ export default function CameraApp() {
     };
 
     const analyzeImage = async () => {
+        setIsAnalyzing(true);
         console.log("OCR - Analyzing image");
-        const detections = [];
-        for (const ocrDetection of await model.forward(photoUri)) {
-            console.log('OCR - Bounding box: ', ocrDetection.bbox);
-            console.log('OCR - detected label: ', ocrDetection.text);
-            console.log('OCR - Bounding score: ', ocrDetection.score);
-            detections.push(ocrDetection);
+        try {
+            const detections = [];
+            for (const ocrDetection of await model.forward(photoUri)) {
+                console.log('OCR - Bounding box: ', ocrDetection.bbox);
+                console.log('OCR - detected label: ', ocrDetection.text);
+                console.log('OCR - Bounding score: ', ocrDetection.score);
+                detections.push(ocrDetection);
+            }
+            setOcrDetections(detections);
+            console.log("OCR - Analysis complete");
+        } catch (error) {
+            console.error('OCR analysis failed:', error);
+        } finally {
+            setIsAnalyzing(false);
         }
-        setOcrDetections(detections);
-        console.log("OCR - Analysis complete");
     }
 
     const reset = () => {
         setPhotoUri(null);
         setOcrDetections([]);
         setImageLayout(null);
+        setIsAnalyzing(false);
     };
 
     if (device == null) return <NoCameraErrorView />;
@@ -85,28 +94,55 @@ export default function CameraApp() {
                         console.log('Scaled rect:', { left: minX, top: minY, width: maxX - minX, height: maxY - minY });
                         
                         return (
-                            <View
-                                key={index}
-                                style={[
-                                    styles.boundingBox,
-                                    {
-                                        left: minX,
-                                        top: minY,
-                                        width: maxX - minX,
-                                        height: maxY - minY,
-                                    },
-                                ]}
-                            />
+                            <View key={index}>
+                                <View
+                                    style={[
+                                        styles.boundingBox,
+                                        {
+                                            left: minX,
+                                            top: minY,
+                                            width: maxX - minX,
+                                            height: maxY - minY,
+                                        },
+                                    ]}
+                                />
+                                <View
+                                    style={[
+                                        styles.textLabel,
+                                        {
+                                            left: minX,
+                                            top: maxY + 2,
+                                            maxWidth: maxX - minX,
+                                        },
+                                    ]}
+                                >
+                                    <Text style={styles.labelText} numberOfLines={2}>
+                                        {detection.text}
+                                    </Text>
+                                </View>
+                            </View>
                         );
                     })}
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.button} onPress={() => setPhotoUri(null)}>
                             <Text style={styles.buttonText}>Reset</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={analyzeImage}>
-                            <Text style={styles.buttonText}>Analyze Image</Text>
+                        <TouchableOpacity 
+                            style={[styles.button, { marginTop: 12 }, isAnalyzing && styles.disabledButton]} 
+                            onPress={analyzeImage}
+                            disabled={isAnalyzing}
+                        >
+                            <Text style={styles.buttonText}>
+                                {isAnalyzing ? 'Analyzing...' : 'Analyze Image'}
+                            </Text>
                         </TouchableOpacity>
                     </View>
+                    {isAnalyzing && (
+                        <View style={styles.loadingOverlay}>
+                            <ActivityIndicator size="large" color="#2196F3" />
+                            <Text style={styles.loadingText}>Analyzing image...</Text>
+                        </View>
+                    )}
                 </>
             ) : (
                 <>
@@ -164,5 +200,35 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: 'red',
         backgroundColor: 'rgba(255, 0, 0, 0.1)',
+    },
+    disabledButton: {
+        backgroundColor: '#999',
+    },
+    loadingOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
+        color: '#fff',
+        fontSize: 16,
+        marginTop: 12,
+    },
+    textLabel: {
+        position: 'absolute',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        paddingHorizontal: 4,
+        paddingVertical: 2,
+        borderRadius: 4,
+    },
+    labelText: {
+        color: '#fff',
+        fontSize: 12,
+        fontWeight: 'bold',
     },
 });
