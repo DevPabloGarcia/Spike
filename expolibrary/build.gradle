@@ -9,7 +9,7 @@ ext {
 }
 
 android {
-    namespace 'com.telefonica.expoconfig2'
+    namespace 'com.telefonica.expolibrary'
     compileSdk {
         version = release(36)
     }

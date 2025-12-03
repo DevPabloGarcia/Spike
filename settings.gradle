@@ -37,7 +37,7 @@ plugins {
 }
 
 expoAutolinking {
-    projectRoot = new File(rootDir, "expoconfig2/my-project")
+    projectRoot = new File(rootDir, "expolibrary/my-project")
 }
 
 extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
@@ -51,4 +51,4 @@ expoAutolinking.useExpoVersionCatalog()
 includeBuild(expoAutolinking.reactNativeGradlePlugin)
 
 include ':app'
-include ':expoconfig2'
+include ':expolibrary'

@@ -1,4 +1,4 @@
-package com.telefonica.expoconfig2.ui.theme
+package com.telefonica.expolibrary.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

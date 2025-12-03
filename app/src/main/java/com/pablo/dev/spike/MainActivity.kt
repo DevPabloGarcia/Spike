@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pablo.dev.spike.ui.theme.SpikeTheme
-import com.telefonica.expoconfig2.ExpoActivityA
-import com.telefonica.expoconfig2.ExpoActivityB
+import com.telefonica.expolibrary.ExpoActivityA
+import com.telefonica.expolibrary.ExpoActivityB
 import kotlin.jvm.java
 
 class MainActivity : ComponentActivity() {

@@ -1,4 +1,4 @@
-package com.telefonica.expoconfig2
+package com.telefonica.expolibrary
 
 import org.junit.Test
 

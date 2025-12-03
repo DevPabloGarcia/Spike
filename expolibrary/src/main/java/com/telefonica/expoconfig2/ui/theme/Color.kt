@@ -1,4 +1,4 @@
-package com.telefonica.expoconfig2.ui.theme
+package com.telefonica.expolibrary.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
