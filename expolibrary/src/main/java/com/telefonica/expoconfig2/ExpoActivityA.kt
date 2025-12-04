@@ -6,7 +6,7 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 class ExpoActivityA : ReactActivity() {
 
-    override fun getMainComponentName(): String = "activity_a"
+    override fun getMainComponentName(): String = "component_a"
 
     override fun createReactActivityDelegate(): ReactActivityDelegate =
         DefaultReactActivityDelegate(this, mainComponentName, false)

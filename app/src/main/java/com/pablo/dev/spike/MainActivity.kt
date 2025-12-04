@@ -75,14 +75,14 @@ fun MainScreen(
             onClick = onExpoClick,
             modifier = Modifier.padding(8.dp)
         ) {
-            Text("Ir a Expo")
+            Text("Ir a Component 1")
         }
 
         Button(
             onClick = onExpoSecondaryClick,
             modifier = Modifier.padding(8.dp)
         ) {
-            Text("Ir a Expo 2")
+            Text("Ir a Component 2")
         }
     }
 }

@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Platform, StatusBar as RNStatusBar } from 'react-native';
 import { useState } from 'react';
 
-export default function ActivityA() {
+export default function ComponentA() {
   const [counter, setCounter] = useState(0);
 
   const handleBack = () => {
