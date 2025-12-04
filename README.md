@@ -50,14 +50,14 @@ export NODE_PATH=$(which node)
 Es **necesario** instalar las dependencias del módulo Expo antes de ejecutar la aplicación:
 
 ```bash
-cd my-project
+cd expolibrary/my-project
 yarn install
 ```
 
 O si usas npm:
 
 ```bash
-cd my-project
+cd expolibrary/my-project
 npm install
 ```
 
