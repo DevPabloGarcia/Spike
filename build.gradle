@@ -16,3 +16,24 @@ plugins {
 
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
+
+subprojects { subproject ->
+    if (subproject.name == "expo" || subproject.name == "expo-modules-core" || subproject.name == "expo-constants") {
+        afterEvaluate {
+            if (subproject.hasProperty("android")) {
+                android {
+                    compileOptions {
+                        sourceCompatibility JavaVersion.VERSION_17
+                        targetCompatibility JavaVersion.VERSION_17
+                    }
+                }
+            }
+
+            tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                kotlinOptions {
+                    jvmTarget = "17"
+                }
+            }
+        }
+    }
+}

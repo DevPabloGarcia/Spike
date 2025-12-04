@@ -6,7 +6,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 
-    def nodeCommand = "/opt/homebrew/bin/node"
+    def nodeCommand = System.getenv("NODE_PATH")
     def reactNativeGradlePlugin = new File(
             providers.exec {
                 workingDir(rootDir)
@@ -37,7 +37,7 @@ plugins {
 }
 
 expoAutolinking {
-    projectRoot = new File(rootDir, "my-project")
+    projectRoot = new File(rootDir, "expolibrary/my-project")
 }
 
 extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
@@ -51,3 +51,4 @@ expoAutolinking.useExpoVersionCatalog()
 includeBuild(expoAutolinking.reactNativeGradlePlugin)
 
 include ':app'
+include ':expolibrary'

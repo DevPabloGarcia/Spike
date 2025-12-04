@@ -1,12 +1,12 @@
-package com.pablo.dev.spike
+package com.telefonica.expolibrary
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
-class ExpoSecondaryActivity : ReactActivity() {
+class ExpoActivityB : ReactActivity() {
 
-    override fun getMainComponentName(): String = "secondary"
+    override fun getMainComponentName(): String = "activity_b"
 
     override fun createReactActivityDelegate(): ReactActivityDelegate =
         DefaultReactActivityDelegate(this, mainComponentName, false)
