@@ -31,6 +31,20 @@ git clone https://github.com/DevPabloGarcia/Spike.git
 cd Spike
 ```
 
+### 2. Configurar entorno
+
+Instala node desde [nodejs.org](https://nodejs.org/) si no lo tienes. Luego, verifica la instalación:
+
+```bashnode -v
+npm -v
+```
+
+Establecer la variable de entorno NODE_PATH con la ruta de node en tu archivo de configuración de shell (`~/.bashrc`, `~/.zshrc`, etc.):
+
+```bash
+export NODE_PATH=$(which node)
+```
+
 ### 2. Instalar dependencias de Expo
 
 Es **necesario** instalar las dependencias del módulo Expo antes de ejecutar la aplicación:
@@ -57,10 +71,10 @@ Para ejecutar correctamente la aplicación, debes seguir estos pasos:
 
 ### 1. Levantar el servidor de Expo
 
-Primero, inicia el servidor de desarrollo de Expo desde la carpeta `my-project`:
+Primero, inicia el servidor de desarrollo de Expo desde la carpeta `my-project`, dentro del modulo expolibrary:
 
 ```bash
-cd my-project
+cd expolibrary/my-project
 yarn start
 ```
 
@@ -104,11 +118,20 @@ Spike/
 │   │       ├── ExpoActivity.kt   # Activity que carga Expo
 │   │       └── MainApplication.kt
 │   └── build.gradle             # Configuración del módulo app
-├── my-project/                  # Módulo Expo/React Native
-│   ├── App.js                   # Componente principal de Expo
-│   ├── assets/                  # Recursos (imágenes, iconos)
-│   ├── package.json             # Dependencias de Node
-│   └── app.json                 # Configuración de Expo
+├── expolibrary/
+│   ├── my-project/                  # Módulo Expo/React Native
+│   │   ├── assets/                  # Recursos (imágenes, iconos) 
+│   │   ├── index.js                 # Entry point que registra los componentes
+│   │   ├── ActivityA.js             # Componente A
+│   │   ├── ActivityB.js             # Componente B
+│   │   ├── app.json                 # Configuración de Expo
+│   │   └── package.json             # Dependencias de Node
+│   ├── src/main/java/             # Código Java/Kotlin para integración
+│   │   └── com/telefonica/expolibrary/ui/
+│   │       ├── ExpoActivityA.kt       # Activity para el componente A
+│   │       └── ExpoActivityB.kt       # Activity para el componente B
+│   └── build.gradle                 # Configuración del módulo expolibrary
+│
 ├── build.gradle                 # Configuración raíz de Gradle
 ├── settings.gradle              # Configuración de módulos
 └── README.md                    # Este archivo
@@ -132,7 +155,7 @@ La vista de Expo incluye:
 
 Si la app Android no puede conectar con el servidor de Expo:
 
-1. Verifica que el servidor esté corriendo (`yarn start` en `my-project/`)
+1. Verifica que el servidor esté corriendo (`yarn start` en `expolibrary/my-project/`)
 2. Asegúrate de que el dispositivo/emulador esté en la misma red
 3. Revisa que el firewall no esté bloqueando el puerto 8081
 
@@ -154,7 +177,7 @@ Si `yarn install` falla:
 
 ```bash
 # Elimina node_modules y el lock file
-cd my-project
+cd expolibrary/my-project
 rm -rf node_modules
 rm package-lock.json  # o yarn.lock
 
