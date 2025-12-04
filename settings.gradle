@@ -6,7 +6,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 
-    def nodeCommand = "/Users/cx02859/.nvm/versions/node/v24.11.1/bin/node"
+    def nodeCommand = System.getenv("NODE_PATH")
     def reactNativeGradlePlugin = new File(
             providers.exec {
                 workingDir(rootDir)
